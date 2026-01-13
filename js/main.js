@@ -72,11 +72,30 @@ function toggleFieldsByPreset(preset) {
 }
 
 // Color preview
-["colBck","col0","col1","col2","col3","col4"].forEach(c=>{
-  const input = document.getElementById(c);
-  const hex = document.getElementById(c+'Hex');
-  input.addEventListener('input',()=>hex.value=input.value.toUpperCase());
+["colBck","col0","col1","col2","col3","col4"].forEach(c => {
+  const colorInput = document.getElementById(c);
+  const hexInput = document.getElementById(c + 'Hex');
+
+  // color picker → hex
+  colorInput.addEventListener('input', () => {
+    hexInput.value = colorInput.value.toUpperCase();
+  });
+
+  // hex → color picker (PASTE SUPPORT)
+  hexInput.addEventListener('input', () => {
+    let val = hexInput.value.trim();
+
+    // auto-fix missing #
+    if (!val.startsWith('#')) val = '#' + val;
+
+    // validate hex
+    if (/^#[0-9A-Fa-f]{6}$/.test(val)) {
+      colorInput.value = val;
+      hexInput.value = val.toUpperCase();
+    }
+  });
 });
+
 
 // Anime Array
 const animeArrayDiv = document.getElementById('animeArray');
@@ -152,7 +171,26 @@ function createAnimeRow(name,color="#7D7D7D",uniq=true, isImport=false){
   const removeBtn=document.createElement('button'); removeBtn.type='button'; removeBtn.textContent='-';
   removeBtn.addEventListener('click',()=>animeArrayDiv.removeChild(row));
   [nameInput,colorInput,hexInput,preview,uniqInput,loopInfo,removeBtn].forEach(el=>row.appendChild(el));
-  colorInput.addEventListener('input',()=>{hexInput.value=colorInput.value.toUpperCase(); preview.style.backgroundColor=colorInput.value;});
+  
+  // color picker → hex + preview
+colorInput.addEventListener('input', () => {
+  hexInput.value = colorInput.value.toUpperCase();
+  preview.style.backgroundColor = colorInput.value;
+});
+
+// hex → color picker + preview (PASTE SUPPORT)
+hexInput.addEventListener('input', () => {
+  let val = hexInput.value.trim();
+
+  if (!val.startsWith('#')) val = '#' + val;
+
+  if (/^#[0-9A-Fa-f]{6}$/.test(val)) {
+    colorInput.value = val;
+    hexInput.value = val.toUpperCase();
+    preview.style.backgroundColor = val;
+  }
+});
+  
   animeArrayDiv.appendChild(row);
 }
 
@@ -517,16 +555,25 @@ function parseList(value) {
     .filter(Boolean);
 }
 
+function normalizeV9Color(val) {
+  return val.replace(/^#/, '').trim();
+}
+
 document.getElementById('generate').addEventListener('click', () => {
+	
+const isModbox = document.getElementById('preset').value === 'modbox';
+	
 const animearray = Array.from(
   document.querySelectorAll('.anime-row')
-).map(r => ({
-  name: r.children[0].value || r.children[0].placeholder, // <-- fallback to placeholder
-  color: r.children[1].value,
-  uniqsnd: r.children[4].checked
-}));
+).map(r => {
+  const rawColor = r.children[1].value;
 
-const isModbox = document.getElementById('preset').value === 'modbox';
+  return {
+    name: r.children[0].value || r.children[0].placeholder,
+    color: isModbox ? (rawColor || "#E5A90E") : normalizeV9Color(rawColor || "E5A90E"),
+    uniqsnd: r.children[4].checked
+  };
+});
 
 let bonusarray = Array.from(
   document.querySelectorAll('.bonus-row')
@@ -536,27 +583,49 @@ let bonusarray = Array.from(
   const codeVal = r.querySelector('input[name="code"]').value;
   const soundVal = r.querySelector('input[name="sound"]').value;
   const aspireVal = r.querySelector('input[name="aspire"]').value;
+  const iconVal = r.querySelector('input[name="icon"]')?.value || '';
+  const iconChecked = r.querySelector('.icon-wrap input[type="checkbox"]')?.checked;
+
 
   if (isModbox) {
-    // Modbox-specific format
-    return {
-      title: nameVal || "Blank",
-      name: srcVal || "b1-blank",
-	  code: codeVal || "1,2,3,4,5",
-      sound: soundVal || "bonus1_blank",
-      predrop: aspireVal || "predrop_blank",
-      loop: Number(r.querySelector('input[name="loop"]').value) || 1
-    };
+  // ---- Modbox-specific format ----
+  const obj = {
+    title: nameVal || "Blank",
+    name: srcVal || "b1-blank",
+    code: codeVal || "1,2,3,4,5",
+    sound: soundVal || "bonus1_blank"
+  };
+
+  // optional predrop
+  if (aspireVal) {
+    obj.predrop = aspireVal;
+  }
+
+  // ALWAYS last
+  obj.loop = Number(r.querySelector('input[name="loop"]').value) || 1;
+
+  return obj;
   } else {
     // v9 / old apps.js format (unchanged)
-    return {
-      name: nameVal || "Blank",
-      src: srcVal || "v1-b1-blank",
-      code: codeVal || "1,2,3,4,5",
-      sound: soundVal || "bonus-blank",
-      aspire: aspireVal || "aspire-blank",
-      loop: Number(r.querySelector('input[name="loop"]').value) || 1
-    };
+const obj = {
+  name: nameVal || "Blank",
+  src: srcVal || "v1-b1-blank",
+  code: codeVal || "1,2,3,4,5",
+  sound: soundVal || "bonus-blank"
+};
+
+// only include aspire if checkbox/input is used
+if (aspireVal) {
+  obj.aspire = aspireVal;
+}
+
+if (iconChecked && iconVal) {
+  obj.icon = iconVal;
+}
+
+obj.loop = Number(r.querySelector('input[name="loop"]').value) || 1;
+
+return obj;
   }
 });
 
