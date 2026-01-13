@@ -1,4 +1,14 @@
-body { font-family: Arial, sans-serif; background: #f5f5f5; padding: 20px; }
+body { 
+font-family: Arial, 
+sans-serif; 
+background: #f5f5f5; 
+padding: 20px; 
+-webkit-user-drag: none;
+-khtml-user-drag: none;
+-moz-user-drag: none;
+-o-user-drag: none;
+user-drag: none;
+}
 h1 {
  font-size: 24px;
 user-select: none; 
