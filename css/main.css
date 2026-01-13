@@ -1,0 +1,125 @@
+body { font-family: Arial, sans-serif; background: #f5f5f5; padding: 20px; }
+h1 {
+ font-size: 24px;
+user-select: none; 
+-webkit-user-select: none; 
+-moz-user-select: none; 
+ -ms-user-select: none; 
+ }
+ 
+ h3, #importFile {
+ user-select: none; 
+-webkit-user-select: none; 
+-moz-user-select: none; 
+ -ms-user-select: none;
+ -webkit-user-drag: none;
+-khtml-user-drag: none;
+-moz-user-drag: none;
+-o-user-drag: none;
+user-drag: none;
+ }
+ 
+ div {
+ -ms-user-select: none;
+ -webkit-user-drag: none;
+-khtml-user-drag: none;
+-moz-user-drag: none;
+-o-user-drag: none;
+user-drag: none;	  
+ }
+
+br {
+user-select: none; 
+-webkit-user-select: none; 
+-moz-user-select: none; 
+ -ms-user-select: none;
+ -webkit-user-drag: none;
+-khtml-user-drag: none;
+-moz-user-drag: none;
+-o-user-drag: none;
+user-drag: none;
+}
+
+.hidden-by-default {
+  display: none;
+}
+
+label { 
+display: block; 
+margin-top: 10px; 
+font-weight: bold; 
+user-select: none; 
+-webkit-user-select: none; 
+-moz-user-select: none; 
+ -ms-user-select: none;
+ -webkit-user-drag: none;
+-khtml-user-drag: none;
+-moz-user-drag: none;
+-o-user-drag: none;
+user-drag: none;
+}
+
+input[type="text"], input[type="number"], input[type="color"], select { 
+padding: 6px; 
+margin-bottom: 10px; 
+user-select: none; 
+-webkit-user-select: none; 
+-moz-user-select: none; 
+ -ms-user-select: none;
+}
+
+input[type="checkbox"] { margin-right: 5px; }
+
+button { 
+margin-top: 10px; 
+padding: 10px; 
+background: #4CAF50; 
+color: #fff; 
+border: none; 
+cursor: pointer; 
+user-select: none; 
+-webkit-user-select: none; 
+-moz-user-select: none; 
+ -ms-user-select: none;
+}
+
+#preset {
+user-select: none; 
+-webkit-user-select: none; 
+-moz-user-select: none; 
+ -ms-user-select: none;
+}
+
+button:hover { background: #45a049; }
+.anime-array, .bonus-array { border: 1px solid #ccc; padding: 10px; margin-top: 10px; max-height: 300px; overflow-y: auto; }
+
+.anime-row, .bonus-row { 
+display: flex; 
+align-items: center; 
+margin-bottom: 5px; 
+gap: 5px; 
+flex-wrap: wrap; 
+ -webkit-user-drag: none;
+-khtml-user-drag: none;
+-moz-user-drag: none;
+-o-user-drag: none;
+user-drag: none;
+}
+
+.anime-row input[type="text"], .bonus-row input[type="text"] { width: 100px; }
+.anime-row input[type="color"] { width: 60px; height: 30px; padding: 0; border: none; }
+.color-preview { width: 30px; height: 30px; border: 1px solid #000; display: inline-block; }
+
+.loop-info { 
+font-size: 12px; 
+font-weight: bold; 
+user-select: none; 
+-webkit-user-select: none; 
+-moz-user-select: none; 
+ -ms-user-select: none;
+  -webkit-user-drag: none;
+-khtml-user-drag: none;
+-moz-user-drag: none;
+-o-user-drag: none;
+user-drag: none;
+}
