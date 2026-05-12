@@ -157,7 +157,7 @@ function createAnimeRow(name,color="#7D7D7D",uniq=true, isImport=false){
   if (isImport) {
     colorInput.value = color;
     hexInput.value = color.toUpperCase();
-	hexInput.placeholder = "#7D7D7D"; // default startup color
+	  hexInput.placeholder = "#7D7D7D"; // default startup color
     preview.style.backgroundColor = color;
   } else {
     colorInput.value = "#7D7D7D"; // default startup color
@@ -173,7 +173,7 @@ function createAnimeRow(name,color="#7D7D7D",uniq=true, isImport=false){
   [nameInput,colorInput,hexInput,preview,uniqInput,loopInfo,removeBtn].forEach(el=>row.appendChild(el));
   
   // color picker → hex + preview
-colorInput.addEventListener('input', () => {
+  colorInput.addEventListener('input', () => {
   hexInput.value = colorInput.value.toUpperCase();
   preview.style.backgroundColor = colorInput.value;
 });
@@ -480,10 +480,7 @@ if (!versionKeys.length) {
 }
 
 // Prefer v1, otherwise fall back to first version (e.g. v21)
-currentVersion = versionKeys.includes('v1')
-  ? 'v1'
-  : versionKeys[0];
-
+currentVersion = versionKeys.includes('v1') ? 'v1' : versionKeys[0];
 versionsCache = sandbox.versions;
 json = versionsCache[currentVersion];
 
@@ -811,16 +808,11 @@ Object.keys(versionsCache).forEach(v => {
   // 1. Stringify with 2-space indent
   let jsonStr = JSON.stringify(versionObj, null, 2);
 
-  // 2. Add spacing before arrays (animearray, bonusarray)
-  jsonStr = jsonStr.replace(
-    /"animearray": \[/,
-    '\n  "animearray": ['
-  );
+  jsonStr = jsonStr.replace(/"([^"]+)":/g, '$1:');
 
-  jsonStr = jsonStr.replace(
-    /"bonusarray": \[/,
-    '\n  "bonusarray": ['
-  );
+  // 2. Add spacing before arrays (animearray, bonusarray)
+  jsonStr = jsonStr.replace(/animearray: \[/, '\n  animearray: [');
+  jsonStr = jsonStr.replace(/bonusarray: \[/, '\n  bonusarray: [');
 
   // 3. Wrap in JS assignment
   finalText += `versions.${v} = ${jsonStr};\n\n`;
